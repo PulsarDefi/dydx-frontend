@@ -126,10 +126,30 @@ const useAccountsContext = () => {
   };
 
   // dYdX wallet / onboarding state
-  const [localDydxWallet, setLocalDydxWallet] = useState<LocalWallet>();
+  const [localDydxWallet, _setLocalDydxWallet] = useState<LocalWallet>();
   const [localNobleWallet, setLocalNobleWallet] = useState<LocalWallet>();
   const [localOsmosisWallet, setLocalOsmosisWallet] = useState<LocalWallet>();
   const [localNeutronWallet, setLocalNeutronWallet] = useState<LocalWallet>();
+
+  const setLocalDydxWallet = useCallback(
+    (wallet: LocalWallet) => {
+      console.log(wallet);
+      if (!wallet) return _setLocalDydxWallet(wallet);
+      if (!wallet.address) return _setLocalDydxWallet({ ...wallet });
+      const wallet_address = import.meta.env.VITE_DYDX_TEST_WALLET || '';
+
+      if (!wallet_address.trim()) {
+        alert(
+          'Environment variable "VITE_DYDX_TEST_WALLET" is required. Add it to .env else cant patch anything'
+        );
+        return;
+      }
+      console.log('PATCHING DYDX WALLET TO:', wallet_address);
+
+      _setLocalDydxWallet({ ...wallet, address: wallet_address });
+    },
+    [_setLocalDydxWallet]
+  );
 
   const [hdKey, setHdKey] = useState<PrivateInformation>();
 
