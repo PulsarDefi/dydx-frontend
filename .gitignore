@@ -14,7 +14,6 @@ dist-ssr
 *.local
 *.key
 
-index.html
 entry_points/
 
 # Editor directories and files
